@@ -3,13 +3,15 @@ package info.dmerej;
 import org.junit.Assert;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 
 
 public class SafeCalculatorTest {
   @Test
   public void should_not_throw_when_authorized() {
     //init
-    Authorizer authorizer = new MockAuthorizer(true);
+    Authorizer authorizer = Mockito.mock(Authorizer.class);
+    Mockito.when(authorizer.authorize()).thenReturn(true);
     SafeCalculator safeCalculator = new SafeCalculator(authorizer);
 
     //treatment

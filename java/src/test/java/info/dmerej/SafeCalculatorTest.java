@@ -1,10 +1,21 @@
 package info.dmerej;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Assert;
+
+import org.junit.Test;
+
 
 public class SafeCalculatorTest {
   @Test
-  void should_not_throw_when_authorized() {
-    // TODO: write a test to demonstrate the bug in SafeCalculator.add()
+  public void should_not_throw_when_authorized() {
+    //init
+    Authorizer authorizer = new MockAuthorizer(true);
+    SafeCalculator safeCalculator = new SafeCalculator(authorizer);
+
+    //treatment
+    int res = safeCalculator.add(1, 2);
+
+    // test
+    Assert.assertEquals(3, res);
   }
 }

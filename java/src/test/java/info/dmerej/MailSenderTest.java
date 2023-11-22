@@ -2,8 +2,10 @@ package info.dmerej;
 
 
 import info.dmerej.mailprovider.SendMailRequest;
+import info.dmerej.mailprovider.SendMailResponse;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 public class MailSenderTest {
     @Test
@@ -12,13 +14,14 @@ public class MailSenderTest {
          User user = new User("karlos", "karols@gmail.com");
          String message = "message";
          SendMailRequest request = new SendMailRequest(user.email(),"New notification", message);
-         MockHttpClient http = new MockHttpClient(request);
+         HttpClient http = Mockito.mock(HttpClient.class);
+         Mockito.when(http.post(Mockito.anyString(), Mockito.any())).thenReturn(new SendMailResponse(200, "response"));
 
          //treatment
          new MailSender(http).sendV1(user, message);
 
          //test
-        Assert.assertEquals(1, http.getSent());
+        Mockito.verify(http).post("https://api.mailprovider.com/v3/", request);
     }
 
     @Test
@@ -27,12 +30,15 @@ public class MailSenderTest {
         User user = new User("karlos", "karols@gmail.com");
         String message = "message";
         SendMailRequest request = new SendMailRequest(user.email(),"New notification", message);
-        MockHttpClient http = new MockHttpClient(request);
+        HttpClient http = Mockito.mock(HttpClient.class);
+
+        Mockito.when(http.post(Mockito.anyString(), Mockito.any())).thenReturn(new SendMailResponse(503, "response"));
+
 
         //treatment
         new MailSender(http).sendV2(user, message);
 
         //test
-        Assert.assertEquals(2, http.getSent());
+        Mockito.verify(http, Mockito.times(2)).post("https://api.mailprovider.com/v3/",request);
     }
 }

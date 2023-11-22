@@ -3,9 +3,13 @@ package info.dmerej;
 import info.dmerej.mailprovider.SendMailRequest;
 import info.dmerej.mailprovider.SendMailResponse;
 
+import java.lang.reflect.Modifier;
+
 public class MailSender {
     private final String baseUrl = "https://api.mailprovider.com/v3/";
     private final HttpClient httpClient;
+
+
 
     public MailSender(HttpClient httpClient) {
         this.httpClient = httpClient;

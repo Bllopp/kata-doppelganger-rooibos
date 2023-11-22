@@ -1,16 +1,28 @@
 package info.dmerej;
 
 
+import info.dmerej.mailprovider.SendMailRequest;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class MailSenderTest {
     @Test
-    void should_make_a_valid_http_request() {
+    public void should_make_a_valid_http_request() {
         // TODO: write a test to demonstrate the bug in MailSender.sendV1()
+         User user = new User("karlos", "karols@gmail.com");
+         String message = "message";
+         SendMailRequest request = new SendMailRequest(user.email(),"New notification", message);
+         MockHttpClient http = new MockHttpClient(request);
+
+         //treatment
+         new MailSender(http).sendV1(user, message);
+
+         //test
+        Assert.assertTrue(http.isSent());
     }
 
     @Test
-    void should_retry_when_getting_a_503_error() {
+    public void should_retry_when_getting_a_503_error() {
         // TODO: write a test to demonstrate the bug in MailSender.sendV2()
     }
 }
